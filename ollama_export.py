@@ -346,7 +346,10 @@ def write_archive(
                 zinfo.file_size = st.st_size
                 zinfo.compress_type = zipfile.ZIP_DEFLATED
                 zinfo.external_attr = (st.st_mode & 0xFFFF) << 16
-                with zf.open(zinfo, "w", force_zip64=True) as dest:
+                # ZIP64 is only needed past the 32-bit size limit; forcing it
+                # on every entry makes Windows Explorer reject the archive
+                # ("multi-volume set" error).
+                with zf.open(zinfo, "w", force_zip64=st.st_size > 0xFFFFFFFF) as dest:
                     with ProgressReader(src, progress) as reader:
                         shutil.copyfileobj(reader, dest, CHUNK)
     progress.finish()

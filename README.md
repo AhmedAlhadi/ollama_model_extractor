@@ -100,6 +100,7 @@ Ollama stores each model as a JSON manifest under `manifests/<registry>/<namespa
 ## Notes
 
 - Packing a large model takes time proportional to its size (e.g. a 17 GiB model means reading and compressing 17 GiB); the progress bar shows bytes packed so you know it's working
+- Windows Explorer's built-in extractor does not support ZIP64, so `.zip` archives containing files over 4 GiB (such as the weights blob of a large model) will not open in Explorer — use `tar -xf` (ships with Windows 10+), 7-Zip, or a `.tar.gz` export instead
 - Archives are gzip-compressed but models are mostly already-compressed weights, so expect modest size reductions
 - Both tools are read-only with respect to your Ollama store — the originals are never modified
 
